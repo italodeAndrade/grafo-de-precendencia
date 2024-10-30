@@ -9,7 +9,7 @@ def cont(n, t, nome):
     for i in range(n):
         print(f"{nome} : {i+1} ")
         time.sleep(t)
-    print("processo encerrado")
+    print(f"processo {nome} encerrado")
 
 def main():
     numero= int(input("insira o numero: "))
