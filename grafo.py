@@ -1,8 +1,6 @@
 import time
-import os
 import sys
-from time import sleep
-from multiprocessing import Process
+from multiprocessing import Process, semaphore
 
 def cont(n, t, nome):
     print(f"processo: {nome} iniciado")
