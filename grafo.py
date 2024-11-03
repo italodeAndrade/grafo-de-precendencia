@@ -1,34 +1,46 @@
 import time
-import sys
-from multiprocessing import Process, semaphore
+from multiprocessing import Process, Semaphore
 
-def cont(n, t, nome):
-    print(f"processo: {nome} iniciado")
+def cont(n, t, nome, sem=None, sem_sai=None):
+    print(f"Processo {nome} iniciado")
+    
+    if sem:
+        sem.acquire()  
+
     for i in range(n):
-        print(f"{nome} : {i+1} ")
+        print(f"{nome} : {i+1}")
         time.sleep(t)
-    print(f"processo {nome} encerrado")
+
+    if sem_sai:
+        sem_sai.release()
+        sem_sai.release()
+
+    print(f"Processo {nome} encerrado")
+        
 
 def main():
-    numero= int(input("insira o numero: "))
-    tempo= float(input("insira o tempo: "))
+    numero = int(input("Insira o número: "))
+    tempo = float(input("Insira o tempo: "))
 
-    A = Process(target=cont, args=(numero, tempo, "A"))
-    B = Process(target=cont, args=(numero, tempo, " B"))
-    C = Process(target=cont, args=(numero, tempo, "  C"))
-    D = Process(target=cont, args=(numero, tempo, "   D"))
+    sem_BC = Semaphore(0)
+    sem_D = Semaphore(0)
+
     
+    A = Process(target=cont, args=(numero, tempo, "A",None,sem_BC )) 
+    B = Process(target=cont, args=(numero, tempo, " B",sem_BC,None))  
+    C = Process(target=cont, args=(numero, tempo, "  C",sem_BC,sem_D))
+    D = Process(target=cont, args=(numero, tempo, "   D",sem_D,None))  
+
     A.start()
     B.start()
     C.start()
-    D.start()
+    D.start()  
 
-    print("Aguardando fim dos processos")
-    A.join()
-    B.join()
+ 
+    A.join()  
+    B.join()  
     C.join()
-    D.join()
-
+    D.join()  
 
 if __name__ == '__main__':
     main()
